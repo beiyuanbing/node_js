@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="./bootstrap-4.4.1-dist/css/bootstrap.css"  crossorigin="anonymous">
+  <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <link rel="stylesheet" href="./bootstrap-fileinput-master/css/fileinput.css"/>
+    <script src="./bootstrap-4.4.1-dist/js/jquery.js"  crossorigin="anonymous"></script>
+    <script src="./bootstrap-4.4.1-dist/js/bootstrap.js"  crossorigin="anonymous"></script>
+    <script src="./bootstrap-fileinput-master/js/fileinput.js"></script>
+    <title>Hello, world!</title>
+  </head>
+  <body>
+    <h1>珍猪🐷云盘计划</h1>
+    <form action="http://47.52.88.23:8888/file" method="POST" enctype="multipart/form-data">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">内容</span>
+            </div>
+            <input type="text" class="form-control" id="content" name="content" placeholder="内容">
+          </div>
+          <div class="input-group mb-3"> 
+            <div class="input-group-prepend">
+              <span class="input-group-text">写真集</span>
+             </div>
+            <input type="file" class="file" id="poster" name="file" accept="image/*" multiple>
+          </div>
+          <button type="submit" class="btn btn-primary">确定</button>
+    </form>
+    <script type="text/javascript">
+      $("#poster").fileinput({
+        language : 'zh',
+        uploadUrl: '/uploads', // you must set a valid URL here else you will get an error
+        allowedFileExtensions : ['jpg', 'png','gif'],
+        overwriteInitial: false,
+        maxFileSize: 10240,
+        showUpload: false,
+        uploadAsync: false,
+        //allowedFileTypes: ['image', 'video', 'flash'],
+        slugCallback: function(filename) {
+            return filename.replace('(', '_').replace(']', '_');
+        }
+    });
+    </script>
+  </body>
+</html>
