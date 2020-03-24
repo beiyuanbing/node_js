@@ -18,6 +18,8 @@ var express = require('express')
 var router = express.Router()
 var uuid = require('uuid');
 var multiparty = require('multiparty');
+
+var formidable = require('formidable')
  
 //文件上传相关
 router.post('/file',function(req, res) {
@@ -53,10 +55,10 @@ router.post('/file',function(req, res) {
  })
  
  router.post('/file64',function(req, res) {
- console.log(req.rawBody);
+ console.log(req.body);
    var imgData = req.body.imgfiles;
    var imgFormat=req.body.imgFormat;
-   if(imgFormat){
+   if(!imgFormat){
        imgFormat="png"
    }
    console.log(imgFormat);
