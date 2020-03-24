@@ -55,18 +55,20 @@ router.post('/file',function(req, res) {
  router.post('/file64',function(req, res) {
  console.log(req.rawBody);
    var imgData = req.body.imgfiles;
-   console.log(imgData);  
+   var imgFormat=req.body.imgFormat;
+   if(imgFormat){
+       imgFormat="png"
+   }
+   console.log(imgFormat);
    var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
-   console.log(base64Data);  
    const creatuuid= uuid.v1();
-   var dataBuffer = new Buffer(base64Data, 'base64');
-     fs.writeFile("./tmplFile/"+creatuuid+".png", dataBuffer, function(err) {
+   var dataBuffer = Buffer.from(base64Data, 'base64');
+     fs.writeFile("./tmplFile/"+creatuuid+"."+imgFormat, dataBuffer, function(err) {
          if(err){
            res.send(err);
          }else{
            res.send("保存成功！");
          }
- 
      });
  });
  
