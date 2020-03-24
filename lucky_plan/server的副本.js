@@ -1,30 +1,20 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
-var formidable = require('formidable');
 var multiparty = require('multiparty');
-var User=require("./controller/user");
+var uuid = require('uuid');
+//json格式
+var bodyParser = require('body-parser');
 app.use('/public', express.static('public'));
- 
+app.use(bodyParser.urlencoded({ extended: true,limit :"50mb"}));
+app.use(bodyParser.json({ limit: '50mb' })); 
 app.get('/', function (req, res) {
    res.sendFile( __dirname + "/public/" + "index.html" );
 })
  
-app.get('/process_get', function (req, res) {
-   // 输出 JSON 格式
-   var response = {
-       "first_name":req.query.first_name,
-       "last_name":req.query.last_name
-   };
-   var user=new User();
-   user.setName(req.query.first_name);
-   user.setUrl(req.query.last_name);
-   user.add();
-   res.end(JSON.stringify(response));
-});
 //文件上传相关
 app.post('/file',function(req, res) {
-   let form = new multiparty.Form();
+   var form = new multiparty.Form();
   /* 设置编辑 */
   form.encoding = 'utf-8';
   //设置文件存储路劲
@@ -32,24 +22,49 @@ app.post('/file',function(req, res) {
   form.parse(req, function (err, fields, files) {
    try {
      const content=fields.content;
-     let inputFile = files.file[0];
+     var inputFile = files.file;
      console.log(content);
-     console.log(inputFile.originalFilename);
-     let uploadedPath = inputFile.path;
-     let newPath = form.uploadDir + "/" + inputFile.originalFilename;
-     //同步重命名文件名 fs.renameSync(oldPath, newPath)
-     fs.renameSync(inputFile.path, newPath);
-     res.send({ data: "上传成功！" });
+     //console.log(inputFile.originalFilename);
+     if(inputFile){
+       inputFile.forEach(item => {
+           var uploadedPath = item.path;
+           var newPath = form.uploadDir + "/" + item.originalFilename;
+           //同步重命名文件名 fs.renameSync(oldPath, newPath)
+           fs.renameSync(uploadedPath, newPath);
+       });
+     }
+     res.redirect('/');
      //读取数据后 删除文件
      // fs.unlink(newPath, function () {
      //   console.log("删除上传文件");
      // })
    } catch (err) {
      console.log(err);
-     res.send({ err: "上传失败！" });
+     res.redirect('/public/error.html');
    };
  });
 })
+
+app.post('/file64',function(req, res) {
+console.log(req.rawBody);
+  var imgData = req.body.imgfiles;
+  console.log(imgData);  
+  var base64Data = imgData.replace(/^data:image\/\w+;base64,/, "");
+  console.log(base64Data);  
+  const creatuuid= uuid.v1();
+  var dataBuffer = new Buffer(base64Data, 'base64');
+    fs.writeFile("./tmplFile/"+creatuuid+".png", dataBuffer, function(err) {
+        if(err){
+          res.send(err);
+        }else{
+          res.send("保存成功！");
+        }
+
+    });
+});
+
+
+
 
 var server = app.listen(8084, function () {
  
