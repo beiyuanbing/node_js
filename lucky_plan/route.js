@@ -27,7 +27,7 @@ router.post('/file',function(req, res) {
    /* 设置编辑 */
    form.encoding = 'utf-8';
    //设置文件存储路劲
-   form.uploadDir = './tmplFile';
+   form.uploadDir = './tmpFile';
    form.parse(req, function (err, fields, files) {
     try {
       const content=fields.content;
@@ -73,7 +73,22 @@ router.post('/file',function(req, res) {
          }
      });
  });
- //处理文件上传
+ //处理excel文件上传
+ router.post('/excel',function(req,res){
+    var form = new multiparty.Form();
+    /* 设置编辑 */
+    form.encoding = 'utf-8';
+    //设置文件存储路劲
+    form.uploadDir = './tmpFile';
+    form.parse(req, function (err, fields, files) { 
+        try {
+          //此处进行解析excel文件
+        }catch(err) {
+          console.log(err);
+          res.send(err);
+        }
+    });
+ });
  
 // 3. 把 router 导出
 module.exports = router
