@@ -21,7 +21,7 @@ var multiparty = require('multiparty');
 
 var formidable = require('formidable')
  
-//文件上传相关
+//文件上传相关，试用所有文件的异步上传，可以多文件
 router.post('/file',function(req, res) {
     var form = new multiparty.Form();
    /* 设置编辑 */
@@ -52,7 +52,7 @@ router.post('/file',function(req, res) {
       res.redirect('/public/error.html');
     };
   });
- })
+ });
  
  router.post('/file64',function(req, res) {
  console.log(req.body);
@@ -73,6 +73,7 @@ router.post('/file',function(req, res) {
          }
      });
  });
+ //处理文件上传
  
 // 3. 把 router 导出
 module.exports = router
